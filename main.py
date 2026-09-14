@@ -1,12 +1,18 @@
 import pandas as pd
 from datetime import datetime
+import json
 
 class 数据处理():
 
     def __init__(self,文件=r'C:\Users\wei\PyCharmMiscProject\zhangben.csv'):
         self.文件=文件
         try:
-            self.df = pd.read_csv(self.文件)
+            if 文件.endswith('.csv'):
+                self.df = pd.read_csv(文件)
+            elif 文件.endswith('.json'):
+                self.df = pd.read_json(文件)
+            else:
+                print('不支持的文件')
         except FileNotFoundError:
             print('找不到文件')
             self.df = pd.DataFrame()
@@ -37,9 +43,10 @@ class 数据处理():
 
     def 月份统计(self):
         self.df['日期'] = self.df['日期'].astype(str)
-        self.df['日期']=self.df['日期'].str[:6]
-        shou=self.df.loc[self.df['类型']=='收入']
-        zhi=self.df.loc[self.df['类型']=='支出']
+        x=self.df.copy()
+        x['日期']=self.df['日期'].str[:6]
+        shou=x.loc[x['类型']=='收入']
+        zhi=x.loc[x['类型']=='支出']
         print(shou.groupby('日期').agg(月收入总金额=('金额','sum')))
         print(zhi.groupby('日期').agg(月支出总金额=('金额','sum')))
 
@@ -97,9 +104,8 @@ class 数据处理():
         print('修改成功')
         print(self.df)
 
-cl=数据处理()
-
 if __name__ == '__main__':
+    cl = 数据处理()
     while True:
         xuan = input('按数字选择功能')
         xuan = xuan.replace(' ', '').strip()
