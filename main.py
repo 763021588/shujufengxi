@@ -48,7 +48,7 @@ class 数据处理():
     def 月份统计(self):
         x=self.df.copy()
         x['日期'] = self.df['日期'].astype(str)
-        x['日期']=self.df['日期'].str[:6]
+        x['日期']=x['日期'].str[:6]
         shou=x.loc[x['类型']=='收入']
         zhi=x.loc[x['类型']=='支出']
         print(shou.groupby('日期').agg(月收入总金额=('金额','sum')))
